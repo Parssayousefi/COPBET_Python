@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 
-def CopBET_CarhartHarris_2016_data(atlas='yeo7', ts_ROI2ROI=None, data_type='example'):
+def CopBET_CarhartHarris_2016_data(atlas='yeo7', ts_ROI2ROI='denoised_volumes', data_type='example'):
     if data_type == 'example':
         topfolder = os.path.join(os.getcwd(), 'LSDdata/exampledata/')
     elif data_type == 'full':

@@ -47,6 +47,14 @@
 
 import numpy as np
 from scipy.signal import hilbert
+import nibabel as nib
+
+def load_nifti_data(file_path):
+    nifti_img = nib.load(file_path)
+    data = nifti_img.get_fdata()
+    # Apply any initial preprocessing required for your analysis here
+    return data
+
 
 def CopBET_time_series_complexity(input_data, LZtype, **kwargs):
     # Initialize the output
@@ -62,13 +70,40 @@ def CopBET_time_series_complexity(input_data, LZtype, **kwargs):
     entropy = np.full(len(input_data), np.nan)
     print('Beginning entropy calculations')
     print(f'Running {LZtype}')
+    print(f"Type of input_data: {type(input_data)}")
+    if hasattr(input_data, 'shape'):
+        print(f"Shape of input_data: {input_data.shape}")
+    elif isinstance(input_data, list):
+        print(f"Length of input_data list: {len(input_data)}")
+    if input_data:
+        print(f"Type of first element in input_data: {type(input_data[0])}")
+        if hasattr(input_data[0], 'shape'):
+            print(f"Shape of first element in input_data: {input_data[0].shape}")
+    if isinstance(input_data, list) and input_data:
+        print(f"Type of first item: {type(input_data[0])}, Shape: {input_data[0].shape if hasattr(input_data[0], 'shape') else 'N/A'}")
+    print("First few entries of input_data:", input_data[:5])
+    if isinstance(input_data, list) and input_data:
+        print("First few elements of the first entry:", input_data[0][:10])
 
     # Main loop through the input data
-    for ses, ts in enumerate(input_data):
-        # Hilbert transform the BOLD time series and take the absolute values
+    for ses, item in enumerate(input_data):
+    # Check if item is a file path (string) and load data accordingly
+        if isinstance(item, str):
+            if item.endswith('.nii.gz'):  # Assuming NIFTI files end with '.nii.gz'
+                ts = load_nifti_data(item)
+            else:
+                print(f"Unsupported file type or path: {item}")
+                continue
+        elif isinstance(item, np.ndarray):
+            ts = item  # Data is already an ndarray, likely loaded from MAT
+        else:
+            print(f"Unsupported input data type: {type(item)}")
+            continue
+
+        # Now, ts contains your time series data, proceed with existing steps
         abs_hts = np.abs(hilbert(ts))
         mean_bold = np.mean(abs_hts)
-        bin_abs_hts = (abs_hts > mean_bold)
+        bin_abs_hts = (abs_hts > mean_bold).astype(int)
 
         # Create random time series by shuffling each regional time series
         random_ts = np.empty_like(abs_hts)
@@ -106,27 +141,26 @@ def CopBET_time_series_complexity(input_data, LZtype, **kwargs):
     out['entropy'] = entropy
     return out
 
-    
 def cpr(string):
- 
- '''
- """
+    """
+    Lempel-Ziv-Welch compression of binary input string, e.g. string='0010101'. 
+    It outputs the size of the dictionary of binary words.
+    
     Adapted from Schartner's Python code
     https://github.com/mschart/SignalDiversity/blob/master/LZ_Spectral.py
     """
- Lempel-Ziv-Welch compression of binary input string, e.g. string='0010101'. It outputs the size of the dictionary of binary words.
- '''
- d={}
- w = ''
- for c in string:
-  wc = w + c
-  if wc in d:
-   w = wc
-  else:
-   d[wc]=wc   
-   w = c
- return len(d)
-
+    d = set()  
+    w = ''
+    count = 1
+    for c in string:  
+        wc = w + c
+        if wc in d:
+            w = wc
+        else:
+            d.add(wc)  
+            count += 1
+            w = c
+    return len(d)  
 
 ## External function: calc_lz_complexity
 #CALC_LZ_COMPLEXITY Lempel-Ziv measure of binary sequence complexity. 
@@ -185,9 +219,6 @@ def cpr(string):
 #   Copyright (C) Quang Thai 2012
 
 
-
-def binary_seq_to_string(S):
-    return ''.join(str(int(x)) for x in S)
 
 def calc_lz_complexity(S, type, normalize):
     if not isinstance(S, (list, np.ndarray)):
