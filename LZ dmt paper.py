@@ -1,4 +1,4 @@
-# The image contains a schematic representation of Lempel-Ziv complexity analysis
+# LZ complexity code DMT EEG paper
 
 
 def cpr(string):
@@ -48,7 +48,7 @@ def cpr(string):
 # EEG signal but we can use any binary string for demonstration purposes.
 
 # Example 
-binary_string = '101010101000111'
+binary_string = '010011'
 #'110000001110001110000000001'
 
 cpr_result = cpr(binary_string)
