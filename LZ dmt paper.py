@@ -54,3 +54,57 @@ binary_string = '010011'
 cpr_result = cpr(binary_string)
 
 cpr_result
+
+
+
+# calculate complexity, relative to length of string
+
+import random
+
+def lz_complexity(string):
+    """Calculate the Lempel-Ziv complexity of a binary string."""
+    # Initialize an empty list to keep track of unique patterns
+    patterns = []
+    # Initialize an empty string for the current pattern
+    pattern = ""
+    # Iterate over each character in the string
+    for c in string:
+        # Attempt to extend the current pattern with the next character
+        new_pattern = pattern + c
+        # If the new pattern has not been seen before
+        if new_pattern not in patterns:
+            # Add it to the list of unique patterns
+            patterns.append(new_pattern)
+            # Start a new pattern from the current character
+            pattern = c
+        else:
+            # Otherwise, extend the current pattern
+            pattern = new_pattern
+    # The complexity is the number of unique patterns
+    return len(patterns)
+
+def normalize_lz(binary_string):
+    """Normalize the LZ complexity by comparing it with that of a shuffled version."""
+    # Calculate the LZ complexity of the original string
+    original_complexity = lz_complexity(binary_string[:25])  # Limit to the first 25 characters
+    
+    # Shuffle the string to get a random sequence
+    shuffled_string = list(binary_string[:25])  # Limit to the first 25 characters
+    random.shuffle(shuffled_string)
+    shuffled_string = ''.join(shuffled_string)
+    
+    # Calculate the LZ complexity of the shuffled string
+    shuffled_complexity = lz_complexity(shuffled_string)
+    
+    # Normalize the complexity by dividing the original by the shuffled
+    normalized_complexity = original_complexity / shuffled_complexity if shuffled_complexity else 0
+    
+    return normalized_complexity
+
+# Example binary string
+binary_string = '101010101000111'
+
+# Normalize the Lempel-Ziv complexity
+normalized_lz = normalize_lz(binary_string)
+
+normalized_lz
