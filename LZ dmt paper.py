@@ -57,7 +57,9 @@ cpr_result
 
 
 
-# calculate complexity, relative to length of string
+##### calculate complexity, relative to length of string
+
+# merge below code with above code ?
 
 import random
 
