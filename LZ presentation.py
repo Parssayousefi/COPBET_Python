@@ -50,4 +50,3 @@ binary_string = '010011'
 
 cpr_result = cpr(binary_string)
 
-cpr_result
