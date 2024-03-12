@@ -11,9 +11,9 @@ def cpr(string):
     b = 1
     # Iterate over each character in the input string
     for index, c in enumerate(string):
-        # Debugging: Print the current iteration number
+        #  Print the current iteration number
         print("current iteration:", b)
-        # Debugging: Print the current character
+        #  Print the current character
         print(f"current character: {c}, at position: {index+1}")
         # Add the current character to the window
         wc = w + c
@@ -43,9 +43,6 @@ def cpr(string):
         
     return len(dict),complexity, dict
 
-
-# To test this function, we need an input string, typically this would be a binarized
-# EEG signal but we can use any binary string for demonstration purposes.
 
 # Example 
 binary_string = '010011'
