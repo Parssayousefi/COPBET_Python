@@ -63,6 +63,7 @@ cpr_result
 
 import random
 
+# this code simply creates a dictionary and returns the length of the dictionary (does not measure complexity accurately)
 def lz_complexity(string):
     """Calculate the Lempel-Ziv complexity of a binary string."""
     # Initialize an empty list to keep track of unique patterns
@@ -85,6 +86,7 @@ def lz_complexity(string):
     # The complexity is the number of unique patterns
     return len(patterns)
 
+# this code calculates complexity by taking into account the length of the dictionary
 def normalize_lz(binary_string):
     """Normalize the LZ complexity by comparing it with that of a shuffled version."""
     # Calculate the LZ complexity of the original string
@@ -104,7 +106,7 @@ def normalize_lz(binary_string):
     return normalized_complexity
 
 # Example binary string
-binary_string = '101010101000111'
+# binary_string = '101010101000111'
 
 # Normalize the Lempel-Ziv complexity
 normalized_lz = normalize_lz(binary_string)
