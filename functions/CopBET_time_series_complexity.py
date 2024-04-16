@@ -52,7 +52,6 @@ import nibabel as nib
 def load_nifti_data(file_path):
     nifti_img = nib.load(file_path)
     data = nifti_img.get_fdata()
-    # Apply any initial preprocessing required for your analysis here
     return data
 
 
