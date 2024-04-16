@@ -86,6 +86,7 @@ def lz_complexity(string):
     # The complexity is the number of unique patterns
     return len(patterns)
 
+
 # this code calculates complexity by taking into account the length of the dictionary
 def normalize_lz(binary_string):
     """Normalize the LZ complexity by comparing it with that of a shuffled version."""
