@@ -14,12 +14,13 @@ Added aditional checks to easily solve empty dataframes
 Note: set derivatives to True for cluster data, and to False for nilearn local data
 
 v7 update: output multiple csv files for each subject
+extra v7 update: added option to limit number of subjects to process for faster debugging
 
 Next option might be to have the function output the csv files directly, instead of returning the dataframe
 
 """
 
-def process_data_bids(bids_root, strategy, atlas_name):
+def process_data_bids(bids_root, strategy, atlas_name, limit_subjects=False):
     print("BIDS root:", bids_root)
     print("Directories and files at BIDS root:", os.listdir(bids_root))
 
@@ -37,12 +38,17 @@ def process_data_bids(bids_root, strategy, atlas_name):
     else:
         atlas_filename = atlas_data.maps
     
-    layout = BIDSLayout(bids_root, validate=False, derivatives=False, absolute_paths=True)
+    layout = BIDSLayout(bids_root, validate=False, derivatives=True, absolute_paths=True)
 
     masker = input_data.NiftiLabelsMasker(labels_img=atlas_filename, standardize=True, verbose=2)
 
     all_data = []
     subjects = layout.get_subjects()
+
+    if limit_subjects: # alternative option to run the code more quickly, change number of subjects to your preference
+        subjects=subjects[:1] # change number to desired number of particpants to preprocess
+
+
     for subject_id in subjects:
         sessions = layout.get_sessions(subject=subject_id) or [None] # handle data sets without sessions
         for session in sessions:
@@ -79,9 +85,6 @@ def process_data_bids(bids_root, strategy, atlas_name):
                     continue
 
                 all_data.append(df)
-                #break # stop after processing first file of first subject # comment out in full analysis
-
-        #break # stop after processing first session of first subject # comment out in full analysis
 
     final_df = pd.concat(all_data, ignore_index=True) if all_data else pd.DataFrame() # concatenate all dataframes
     final_df['Dataset'] = os.path.basename(bids_root) # add dataset name to dataframe
@@ -102,7 +105,7 @@ strategy = 'compcor'
 atlas_name = "yeo"
 
 # call function and print results
-results = process_data_bids(bids_root, strategy, atlas_name)
+results = process_data_bids(bids_root, strategy, atlas_name, limit_subjects=True)
 print(results)
 
 # define path for csv and export csv (all subjects together in one document)
