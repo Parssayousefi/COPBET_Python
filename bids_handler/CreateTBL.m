@@ -18,7 +18,7 @@ function tbl = CreateTBL(csvFolderPath)
         filepath = fullfile(csvFolderPath, filename);
         
         % Extract metadata from filename
-        tokens = regexp(filename, 'Dat-(.*?)_Sub-(.*?)_Task-(.*?)_Session-(.*?)_Atlas-(.*?)\.csv', 'tokens');
+        tokens = regexp(filename, 'dat-(.*?)_sub-(.*?)_task-(.*?)_ses-(.*?)_atlas-(.*?)\.csv', 'tokens');
         tokens = tokens{1};
         
         datasets{i} = tokens{1};
@@ -35,3 +35,5 @@ function tbl = CreateTBL(csvFolderPath)
     tbl = table(dataCells, datasets, subjects, tasks, sessions, atlases, ...
                 'VariableNames', {'Data', 'Dataset', 'Subject', 'Task', 'Session', 'Atlas'});
 end
+
+tbl = CreateTBL("/Users/olivier/Documents/MSc/thesis/Analysis_beta/preprocessed_csv")
