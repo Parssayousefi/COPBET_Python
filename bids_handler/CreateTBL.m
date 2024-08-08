@@ -33,7 +33,6 @@ function tbl = CreateTBL(csvFolderPath)
 
     % Create a table with the extracted data and metadata
     tbl = table(dataCells, datasets, subjects, tasks, sessions, atlases, ...
-                'VariableNames', {'Data', 'Dataset', 'Subject', 'Task', 'Session', 'Atlas'});
+                'VariableNames', {'data', 'dataset', 'subject', 'task', 'session', 'atlas'});
 end
 
-tbl = CreateTBL("/Users/olivier/Documents/MSc/thesis/Analysis_beta/preprocessed_csv")
