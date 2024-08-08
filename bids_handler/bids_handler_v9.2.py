@@ -10,8 +10,10 @@ import numpy as np
 
 v9.2 updates
 
-- time series masked confound extraction works for compcor, scrubbing is included too
-- created separate if statements for gsr and compcor when doing time series extraction
+- time series masked confound extraction works for compcor and gsr, parameters of conf regression are good now
+- included scrubbing for compcor and gsr
+- created separate if statements for gsr and compcor when doing time series extraction with confounds[0] specification for gsr
+- added confound regression specification (gsr/compcor) to csv file name
 
 - ! Change derivatives to true for cluster data, and to false for nilearn data
 - !! Look into changing the framewise displacement when using a different atlas (higher number of regions means frame wise displacement is affected)
