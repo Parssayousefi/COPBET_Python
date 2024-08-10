@@ -1,4 +1,4 @@
-function tbl = CreateTBL(csvFolderPath)
+function tbl = CreateTBL_2(csvFolderPath)
     files = dir(fullfile(csvFolderPath, '*.csv'));
     numFiles = length(files);
     if numFiles == 0
@@ -30,7 +30,8 @@ function tbl = CreateTBL(csvFolderPath)
         conreg{i} = tokens{6}; 
         
         % Load the time series data from CSV
-        dataCells{i} = readmatrix(filepath);
+        % dataCells{i} = readmatrix(filepath);
+        dataCells{i} = filepath;
     end
 
     % Create a table with the extracted data and metadata
