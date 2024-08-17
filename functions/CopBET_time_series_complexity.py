@@ -48,6 +48,8 @@
 import numpy as np
 from scipy.signal import hilbert
 import nibabel as nib
+import pandas as pd
+from functions import CopBET_function_init
 
 def load_nifti_data(file_path):
     nifti_img = nib.load(file_path)
@@ -65,25 +67,23 @@ def CopBET_time_series_complexity(input_data, LZtype, **kwargs):
         raise ValueError("Please specify which type of time-series complexity measure to use. "
                          "Possible inputs are 'LZ78temporal', 'LZ78spatial', 'LZ76temporal', 'LZ76spatial'")
 
-    # Load data and initialize entropy array
-    entropy = np.full(len(input_data), np.nan)
-    print('Beginning entropy calculations')
-    print(f'Running {LZtype}')
-    print(f"Type of input_data: {type(input_data)}")
-    if hasattr(input_data, 'shape'):
+    
+    # Check if input_data is a DataFrame
+    if isinstance(input_data, pd.DataFrame):
         print(f"Shape of input_data: {input_data.shape}")
-    elif isinstance(input_data, list):
-        print(f"Length of input_data list: {len(input_data)}")
-    if input_data:
-        print(f"Type of first element in input_data: {type(input_data[0])}")
-        if hasattr(input_data[0], 'shape'):
-            print(f"Shape of first element in input_data: {input_data[0].shape}")
-    if isinstance(input_data, list) and input_data:
-        print(f"Type of first item: {type(input_data[0])}, Shape: {input_data[0].shape if hasattr(input_data[0], 'shape') else 'N/A'}")
-    print("First few entries of input_data:", input_data[:5])
-    if isinstance(input_data, list) and input_data:
-        print("First few elements of the first entry:", input_data[0][:10])
+        print(f"Columns in input_data: {input_data.columns}")
+        print("First few rows of input_data:")
+        print(input_data.head())
 
+    # elif isinstance(input_data, list):
+    #     print(f"Length of input_data list: {len(input_data)}")
+    if isinstance(input_data, pd.DataFrame):
+        if not input_data.empty:
+            print(f"Type of first element in input_data: {type(input_data.iloc[0])}")
+            if hasattr(input_data.iloc[0], 'shape'):
+                print(f"Shape of first element in input_data: {input_data.iloc[0].shape}")
+    else:
+        print("Input_data is not a DataFrame.")
     # Main loop through the input data
     for ses, item in enumerate(input_data):
     # Check if item is a file path (string) and load data accordingly

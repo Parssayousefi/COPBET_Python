@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 from scipy.io import loadmat
 import nibabel as nib
+from functions import CopBET_CarhartHarris_2016_data
+
 
 def CopBET_CarhartHarris_2016_data(atlas='yeo7', ts_ROI2ROI='denoised_volumes', type='example'):
     """
@@ -49,7 +51,7 @@ def CopBET_CarhartHarris_2016_data(atlas='yeo7', ts_ROI2ROI='denoised_volumes', 
                     else:
                         raise FileNotFoundError(f"Could not find denoised_volumes file for {sub}, {cond}, session {ses}")
                 else:
-                    data_path = os.path.join(sub_folder, 'ROIdata', atlas, f'{sub}_{cond}_task-rest_run-0{ses}_bold.mat')
+                    data_path = os.path.join(topfolder, 'ROIdata', atlas, f'{sub}_{cond}_task-rest_run-0{ses}_bold.mat')
                     if os.path.exists(data_path):
                         V_roi = loadmat(data_path)['V_roi']
                         tbl.loc[tblcount, 'data'] = V_roi
@@ -74,11 +76,45 @@ def CopBET_CarhartHarris_2016_data(atlas='yeo7', ts_ROI2ROI='denoised_volumes', 
                         raise ValueError(error_msg)
 
     data = []  # Placeholder for any data you want to return
+
+    tbl['data'] = tbl['data'].apply(np.array)
     return tbl, data, opts
 
 
+# GitHub Copilot
+# used /explain
+# The DataFrame created in the CopBET_CarhartHarris_2016_data function has the following structure:
+
+# The DataFrame has columns with the following names: 'data', 'rp', 'subject', 'condition', 'session', 'num_vols', and 'entropy'.
+# Each row of the DataFrame represents a specific data entry or observation.
+# The 'data' column stores the file path or loaded data, depending on the value of the ts_ROI2ROI parameter. If ts_ROI2ROI is set to 'denoised_volumes', the 'data' column contains the file path of the denoised volumes file. If ts_ROI2ROI is set to any other value, the 'data' column contains the loaded ROI data.
+# The 'rp' column is not used in the provided code and is left as an empty object.
+# The 'subject' column stores the subject name associated with the data entry.
+
+
+
+# Varley script, temporal LZ78
 atlas = 'Schaefer1000'
 tbl, data, opts = CopBET_CarhartHarris_2016_data(atlas, 'denoised_volumes', 'example')
-print(tbl)
-CopBET_time_series_complexity(input_data=tbl, LZtype='LZ78spatial', keepdata=False, parallel=True)
+print(tbl.columns)
+
+new_func(tbl)
+
+tbl = CopBET_time_series_complexity(input_data=tbl, LZtype='LZ78spatial', keepdata=False, parallel=True)
+
+tbl['Time_series_complexity_temporal'] = tbl['entropy']
+
+print(tbl['entropy'])
+
+# Plotting the temporal complexity
+#plot_boxplots_ch2016(tbl['entropy'], tbl, 'Time series complexity, temporal')
+
+# Varley script, spatial LZ78
+tbl, data, opts = CopBET_CarhartHarris_2016_data(atlas, 'ts', 'example')
+tbl = CopBET_time_series_complexity(tbl, 'LZ78spatial', True, True)
+
+tbl['Time_series_complexity_spatial'] = tbl['entropy']
+
+# Plotting the spatial complexity
+#plot_boxplots_ch2016(tbl['entropy'], tbl, 'Time series complexity, spatial')
 
