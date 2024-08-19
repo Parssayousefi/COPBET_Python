@@ -2,6 +2,13 @@ import scipy.io
 import pandas as pd
 import numpy as np
 
+
+'''
+
+Script to load .mat file containing entropy data and convert it to a pandas DataFrame
+- handles different types of columns (single values, 1x100 arrays, 17x17 arrays)
+
+'''
 # Load the .mat file
 mat = scipy.io.loadmat('/Users/olivier/Documents/MSc/thesis/COPBET_Python/Analysis/tbl_struct.mat')
 
